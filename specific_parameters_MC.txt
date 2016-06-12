@@ -1,0 +1,33 @@
+%DEFAULT PARAMETERS
+1) Mu_a
+2) Delta
+3) s
+4) Pdel
+5) Pben
+6) MutRate_of_loci
+7) MutRate_of_rho
+8) init_condition
+9) N_of_Qtrait_loci
+10) bias_mut_rho
+11) Ltot
+12) log10_POP_size
+13) MutRate_of_alpha
+14) MutRate_of_beta
+15) replication_id
+16) a
+17) continue_from_previous_state
+
+%DONT CHANGE THE FIRST 30 LINES OF THIS DOCUMENT
+%CHANGE UP TO 7 PARAMETERS (can be modified in formParamters)
+% Each row corresponds to a parameter
+% Column 1 is parameter type
+% Column 2 is starting value
+% Column 3 is another parameter type
+% ...and so on and so forth
+% LEAVE ROWS AS -1 IF YOU DON'T WANT TO CHANGE THE DEFAULT VALUES
+% PRECONDITIONS: the values input below will not be checked by the algorithm, and need to be checked for the simulations not to crash
+
+%CHANGE THE VALUES BELOW
+12 6.0 11 600 8 1 15 1 10 0.465 -1 -1 -1 -1 
+12 6.0 11 600 8 1 15 2 10 0.465 -1 -1 -1 -1 
+The above examples mean pop_size=10^6, Ltot=500, high-rho initial condition, there are two replicates of the current condition (the output files will contain rep1 and rep2 as suffix in the filenames), bias in rho is that P+rho:P-rho=99:1. There are enough space to specify two more parameters. Delete this line when run simulations.
