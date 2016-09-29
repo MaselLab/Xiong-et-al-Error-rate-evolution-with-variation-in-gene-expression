@@ -16,8 +16,8 @@
 15) replication_id
 16) a
 17) continue_from_previous_state
-
-%DONT CHANGE THE FIRST 30 LINES OF THIS DOCUMENT
+18) SD_drho
+%SpecificFileGen reads parameter values from line 31 and beyond. DO NOT CHANGE THE FORMAT OF LINE 31 AND BEYOND, unless SpecificFileGen is informed of the change.
 %CHANGE UP TO 7 PARAMETERS (can be modified in formParamters)
 % Each row corresponds to a parameter
 % Column 1 is parameter type
