@@ -29,6 +29,7 @@ MutRate_of_beta =3*10^-8;
 new_optimal_trait =2;
 SD_steady_state_beta = sqrt((Sigma_m/N_of_Qtrait_loci)^2/(1-((a-1)/a)^2));
 bias_mut_rho=0;
+SD_drho=0.2;
 
 %default runtime parameters
 outerLoopSteps = 105;
@@ -38,6 +39,7 @@ Range_of_dalpha = 5*Sigma_m/N_of_Qtrait_loci; % integrate over -5SD to 5SD
 Range_of_dbeta = 5*Sigma_m/N_of_Qtrait_loci; 
 Range_of_NewBeta = 5*SD_steady_state_beta;
 GridNum = 2000;
+GridNum_drho = GridNum;
 burn_in = 100+1; % steps before changing optimal trait
 recovery_flag1 = 0; %recovery of fitness
 recovery_flag2 = 0; %recovery of Q trait
@@ -45,8 +47,8 @@ stop_flag =0;
 recalc_mut_alphabeta = 1;
 
 %modify the parameters if needed
-[Mu_a, Delta, s, Pdel, Pben, MutRate_of_loci, MutRate_of_rho, MutRate_of_alpha, MutRate_of_beta, log_of_rho, outerLoopSteps, innerLoopSteps, Ltot, init_ldel ...
-    , POP_size, normal_distribution_sd, normal_distribution_mean, N_of_Qtrait, N_of_Qtrait_loci, new_optimal_trait, a, bias_mut_rho,end_state, file_suffix, directory_of_source_code,directory_of_result] = formParameters(Mu_a, Delta, s, Pdel, Pben ...
+[SD_drho,Mu_a, Delta, s, Pdel, Pben, MutRate_of_loci, MutRate_of_rho, MutRate_of_alpha, MutRate_of_beta, log_of_rho, outerLoopSteps, innerLoopSteps, Ltot, init_ldel ...
+    , POP_size, normal_distribution_sd, normal_distribution_mean, N_of_Qtrait, N_of_Qtrait_loci, new_optimal_trait, a, bias_mut_rho,end_state, file_suffix, directory_of_source_code,directory_of_result] = formParameters(SD_drho,Mu_a, Delta, s, Pdel, Pben ...
     , MutRate_of_loci, MutRate_of_rho, MutRate_of_alpha, MutRate_of_beta, log_of_rho, outerLoopSteps, innerLoopSteps, Ltot, init_ldel, POP_size ...
     , normal_distribution_sd, normal_distribution_mean, N_of_Qtrait, N_of_Qtrait_loci, new_optimal_trait, a, bias_mut_rho,varargin, nargin);
 
@@ -104,7 +106,28 @@ switch normal_distribution_sd
         if bias_mut_rho~=0
             interval_H(3,entry2)=[5.77,6.16,6.68,7.35,8.17,9.14,10.56,14.88,18.36,22.07,26.06,30.21,34.37];
             interval_L(3,entry2)=[5.77,6.16,6.69,7.35,8.16,9.13,10.50,14.89,18.27,22.02,26.13,30.26,34.44];     
-        end        
+        end    
+	
+	if Delta< log(10)*10^-4.0
+            interval_H(3,entry2)=[5.69,6.05,6.52,7.13,7.86,8.70,9.64,10.64,11.70,12.72,13.79,14.79,15.72];
+            interval_L(3,entry2)=[5.69,6.05,6.52,7.13,7.86,8.70,9.65,10.64,11.68,12.73,13.77,14.81,15.85];
+        elseif Delta< log(10)*10^-3.25
+            interval_H(3,entry2)=[5.70,6.07,6.56,7.18,7.96,8.86,9.89,10.99,12.17,13.31,14.45,26.01,30.85];
+            interval_L(3,entry2)=[5.70,6.07,6.56,7.18,7.95,8.86,9.89,11.01,12.14,13.30,14.49,17.78,30.63];
+        elseif Delta< log(10)*10^-2.0
+            interval_H(3,entry2)=[5.29,5.62,6.08,6.69,7.67,10.50,13.01,15.61,18.76,22.91,26.76,30.62,34.76];
+            interval_L(3,entry2)=[5.28,5.62,6.07,6.70,7.71,10.42,12.86,15.37,19.28,22.72,26.83,30.28,34.82];
+        elseif Delta< log(10)*10^-1.75
+            interval_H(3,entry2)=[5.82,6.23,6.75,7.46,8.94,11.20,13.47,16.35,19.66,23.32,27.10,31.03,35.11];
+            interval_L(3,entry2)=[5.82,6.22,6.74,7.47,8.86,11.18,13.59,16.23,19.70,23.36,27.15,31.10,35.14];
+        elseif Delta< log(10)*10^-1.0
+            interval_H(3,entry2)=[5.88,6.31,7.22,8.47,9.93,11.98,14.26,17.17,20.27,23.86,27.63,31.64,35.96];
+            interval_L(3,entry2)=[5.88,6.32,7.24,8.40,9.94,11.87,14.20,17.20,20.41,23.89,27.65,31.68,35.98];
+        elseif Delta< log(10)*10^-0.5
+            interval_H(3,entry2)=[6.34,7.03,7.97,9.21,10.72,12.69,15.10,17.87,21.03,24.66,28.88,33.77,39.29];
+            interval_L(3,entry2)=[6.34,7.03,7.98,9.20,10.80,12.76,15.15,17.87,21.05,24.65,28.85,33.79,39.42];
+        end
+
     case 3.5
         interval_H(3,entry1)=[5.77,6.16,6.69,7.38,8.25,9.39,10.92,12.84,15.08,17.60,20.65,24.11,27.77]; 
         interval_H(3,entry3)=[8.78,10.09,11.87,13.74];
@@ -178,10 +201,13 @@ else % use the end state of previous simulation to initialize everything
 end
 
 % drho grid and pdf
-Grid_of_drho = (linspace(-Range_drho,Range_drho,GridNum))';
-PD1 = ProbDistUnivParam('normal', [0 0.2]);
+if SD_drho/0.2>1    
+    GridNum_drho=GridNum_drho*SD_drho/0.2; % GridNum_drho is at least 2000. 0.2 is the default value of SD_drho
+end
+Range_drho=Range_drho*SD_drho/0.2;
+Grid_of_drho = (linspace(-Range_drho,Range_drho,GridNum_drho))';
+PD1 = ProbDistUnivParam('normal', [0 SD_drho]);
 PDF_of_drho = pdf(PD1,Grid_of_drho);
-Grid_of_drho=Grid_of_drho+bias_mut_rho;
 
 % dalpha grid and pdf
 Grid_of_dalpha = linspace(-Range_of_dalpha,Range_of_dalpha,GridNum);
@@ -327,7 +353,7 @@ for i = 1:outerLoopSteps   % main iterations
         P_of_lben = POP_size*MutRate_of_loci*Pben*sum(Pfix_of_lben); 
 
         % Calculate fixation flux of rho mutation
-        [P_of_drho, max_Pfix_of_drho] = P_drho(Delta,MutRate_of_rho,POP_size,rho,s,Sigma_f,N_of_Qtrait_loci,trait_distance,state_of_Qtrait_loci,Current_exp_of_ldel,Tot_exp_frq,Range_drho,GridNum,Pben,Pdel); %% replaced by new function P_drho
+        [P_of_drho, max_Pfix_of_drho] = P_drho(Delta,MutRate_of_rho,POP_size,rho,s,Sigma_f,N_of_Qtrait_loci,trait_distance,state_of_Qtrait_loci,Current_exp_of_ldel,Tot_exp_frq,Range_drho,GridNum_drho,Pben,Pdel); %% replaced by new function P_drho
         P_of_drho =POP_size*P_of_drho;
 	
         % Calculate fixation flux of alpha and beta mutation    
@@ -353,7 +379,7 @@ for i = 1:outerLoopSteps   % main iterations
         
         switch Mut
             case 2 % rho
-                rho = muta_rho(Delta,POP_size,rho,s,Sigma_f,Current_exp_of_ldel,Tot_exp_frq,state_of_Qtrait_loci,trait_distance,N_of_Qtrait_loci,max_Pfix_of_drho,Pben,Pdel,bias_mut_rho); %% sampling and mutaion are now merged in one function. rewrote the code so that muta_rho, muta_alpha and muta_beta each contains a rejection method module.                
+                rho = muta_rho(Delta,POP_size,rho,s,Sigma_f,Current_exp_of_ldel,Tot_exp_frq,state_of_Qtrait_loci,trait_distance,N_of_Qtrait_loci,max_Pfix_of_drho,Pben,Pdel,bias_mut_rho,SD_drho); %% sampling and mutaion are now merged in one function. rewrote the code so that muta_rho, muta_alpha and muta_beta each contains a rejection method module.                
             case 4 % alpha
                 muta_alpha_beta_biased(rho,POP_size,Sigma_f,Sigma_m,trait_distance,N_of_Qtrait_loci,N_of_Qtrait,max_Pfix_of_dalpha,a,Ltot,1); %% same as above                               
             case 5 % beta
