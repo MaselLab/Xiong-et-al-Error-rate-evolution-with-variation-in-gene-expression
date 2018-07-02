@@ -1,4 +1,4 @@
-function [rho]=muta_rho(Delta,POP_size,rho,s,Sigma_f,Current_exp_of_ldel,Tot_exp_frq,state_of_Qtrait_loci,trait_distance,N_of_Qtrait_loci,Max_Pfix,Pben,Pdel,bias_mut_rho)
+function [rho]=muta_rho(Delta,POP_size,rho,s,Sigma_f,Current_exp_of_ldel,Tot_exp_frq,state_of_Qtrait_loci,trait_distance,N_of_Qtrait_loci,Max_Pfix,Pben,Pdel,bias_mut_rho,SD_drho)
 global Alpha Beta
 
 if state_of_Qtrait_loci{2,1}==0
@@ -13,7 +13,7 @@ end
 while 1        
     temp=10; % no magic about this value. see the next couple lines.    
     while temp>1 % make sure rho <=1 after mutation
-        drho = normrnd(0, 0.2)+bias_mut_rho;
+        drho = normrnd(0, SD_drho)+bias_mut_rho;
         temp = 10^drho*rho;
     end    
     

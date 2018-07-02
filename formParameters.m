@@ -1,5 +1,5 @@
-function[Miu, Delta, s, Pdel, Pben, MutRate_of_loci, MutRate_of_rho, MutRate_of_alpha, MutRate_of_beta, log_of_rho, outerLoopSteps, innerLoopSteps, Ltot, init_ldel, POP_size, normal_distribution_sd, normal_distribution_mean, N_of_Qtrait, N_of_Qtrait_loci, delta_oe, a, bias_mut_rho, end_state,file_suffix,dir_script,dir_output] ...
-    = formParameters(Miu, Delta, s, Pdel, Pben, MutRate_of_loci, MutRate_of_rho, MutRate_of_alpha, MutRate_of_beta, log_of_rho, outerLoopSteps, innerLoopSteps, Ltot, init_ldel, POP_size, normal_distribution_sd, normal_distribution_mean, N_of_Qtrait, N_of_Qtrait_loci, delta_oe, a, bias_mut_rho, arguments, numvars)
+function[SD_drho, Miu, Delta, s, Pdel, Pben, MutRate_of_loci, MutRate_of_rho, MutRate_of_alpha, MutRate_of_beta, log_of_rho, outerLoopSteps, innerLoopSteps, Ltot, init_ldel, POP_size, normal_distribution_sd, normal_distribution_mean, N_of_Qtrait, N_of_Qtrait_loci, delta_oe, a, bias_mut_rho, end_state,file_suffix,dir_script,dir_output] ...
+    = formParameters(SD_drho, Miu, Delta, s, Pdel, Pben, MutRate_of_loci, MutRate_of_rho, MutRate_of_alpha, MutRate_of_beta, log_of_rho, outerLoopSteps, innerLoopSteps, Ltot, init_ldel, POP_size, normal_distribution_sd, normal_distribution_mean, N_of_Qtrait, N_of_Qtrait_loci, delta_oe, a, bias_mut_rho, arguments, numvars)
 %% if simulation condition is provided, take it
 use_input = false; % default value
 if numvars ==5
@@ -80,6 +80,8 @@ if use_input == true
                     a=valTemp;
                 case 17
                     cont=1;
+	        case 18
+		    SD_drho=valTemp;
             end
         end
     end
@@ -95,7 +97,7 @@ end
 
 %% Make a report of important parameters
 strMua = num2str(Miu);
-strSigma = num2str(Delta);
+strDelta = num2str(Delta);
 strS = num2str(s);
 strPdel = num2str(Pdel);
 strPben = num2str(Pben);
@@ -106,6 +108,7 @@ strSkip = int2str(innerLoopSteps);
 strLdel = int2str(init_ldel);
 strPop = int2str(POP_size);
 strLtot = int2str(Ltot);
+strSD_drho = num2str(SD_drho);
 strNormDistSD = num2str(normal_distribution_sd);
 strNormDistMean = int2str(normal_distribution_mean);
 strRho = num2str(log_of_rho);
@@ -123,7 +126,7 @@ else
 	strRepID = '';
 end
 vectorOfParameters = {  ['Mu_a: ' strMua];
-                        ['Delta: ' strSigma];
+                        ['Delta: ' strDelta];
                         ['s: ' strS];
                         ['Pdel: ' strPdel];
                         ['Pben: ' strPben];
@@ -136,6 +139,7 @@ vectorOfParameters = {  ['Mu_a: ' strMua];
                         ['initial ldel: ' strLdel];
                         ['N: ' strPop];
                         ['Ltot: ' strLtot];
+			['SD_drho: ' strSD_drho];
                         ['Distribution SD: ' strNormDistSD];
                         ['Distribution Mean: ' strNormDistMean];
                         ['Log10(rho): ' strRho];
